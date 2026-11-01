@@ -1,0 +1,24 @@
+{
+  "id": "zen-dual-tab-views",
+  "name": "Zen Dual Tab Views (Bottom Dock & Cursor Switcher)",
+  "description": "Adds two keyboard- and mouse-friendly tab views for Zen Browser: a sleek floating Bottom Tab Dock (auto-hide on bottom hover and/or keyboard toggle) and an instant Cursor Tab View (Popover List or Radial Ring around your mouse cursor).",
+  "author": "Jaheen",
+  "version": "1.0.0",
+  "homepage": "https://github.com/Jaheen/ZenMod_Tab",
+  "style": "chrome.css",
+  "readme": "README.md",
+  "preferences": "preferences.json",
+  "scripts": [
+    "zen-dual-tabs.uc.mjs"
+  ],
+  "tags": [
+    "tabs",
+    "dock",
+    "cursor",
+    "productivity",
+    "radial",
+    "navigation"
+  ],
+  "createdAt": "2026-11-01",
+  "updatedAt": "2026-11-01"
+}

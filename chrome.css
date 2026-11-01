@@ -1,0 +1,844 @@
+/* ==========================================================================
+ * Zen Dual Tab Views — chrome.css
+ * 1) Floating Bottom Tab Dock (auto-hide on bottom hover & keyboard toggle)
+ * 2) Cursor Tab View (Popover List & Radial Ring around cursor)
+ * 3) Compact Icon-Only Pinned/Essential Tabs with Smooth Hover Expansion
+ *    + Dimmed Unloaded ("pending") Pinned Tabs
+ * 4) Layout Sizes: Normal (default), Sleek Compact, and Ultra-Dense Micro
+ * 5) True Glass Blur Effect (On / Off) & Color Themes (Follow Zen / Dark / Light)
+ * 6) Unified Settings Menu Popover (⚙)
+ * ========================================================================== */
+
+:root {
+  /* --- Color Theme: Follow Zen Theme (Default) --- */
+  --zdt-accent: var(--zen-primary-color, #6366f1);
+  --zdt-surface-base: var(--zen-colors-tertiary, var(--lwt-accent-color, #16161c));
+  --zdt-surface-elevated: var(--zen-colors-secondary, #22222b);
+
+  /* True Glass Blur: translucent surface so backdrop-filter blurs web content */
+  --zdt-bg: color-mix(in srgb, var(--zdt-surface-base) 42%, rgba(18, 18, 24, 0.36));
+  --zdt-bg-elevated: color-mix(in srgb, var(--zdt-surface-elevated) 52%, rgba(28, 28, 36, 0.44));
+  --zdt-backdrop: blur(26px) saturate(190%) contrast(104%);
+  --zdt-border: rgba(255, 255, 255, 0.18);
+  --zdt-border-specular: inset 0 1px 0 0 rgba(255, 255, 255, 0.24);
+  --zdt-border-active: var(--zdt-accent);
+  --zdt-text: rgba(248, 250, 252, 0.96);
+  --zdt-text-muted: rgba(180, 180, 190, 0.88);
+  --zdt-item-hover: rgba(255, 255, 255, 0.12);
+  --zdt-item-active: color-mix(in srgb, var(--zdt-accent) 28%, transparent);
+  --zdt-danger: #ef4444;
+  --zdt-shadow:
+    0 18px 42px -6px rgba(0, 0, 0, 0.55),
+    0 0 1px 1px rgba(255, 255, 255, 0.1),
+    var(--zdt-border-specular);
+
+  /* --- Normal Layout Size (Default) --- */
+  --zdt-font-size: 12.5px;
+  --zdt-row-h: 34px;
+  --zdt-pin-size: 34px;
+  --zdt-favicon-size: 16px;
+  --zdt-dock-pad: 7px 10px;
+  --zdt-dock-gap: 6px;
+  --zdt-pill-min-w: 110px;
+  --zdt-pill-max-w: 190px;
+  --zdt-pill-pad: 0 10px;
+  --zdt-popover-w: 320px;
+  --zdt-popover-max-h: 440px;
+  --zdt-list-max-h: 310px;
+  --zdt-radius-lg: 15px;
+  --zdt-radius-md: 10px;
+  --zdt-radius-sm: 7px;
+  --zdt-btn-size: 30px;
+  --zdt-radial-center-size: 86px;
+  --zdt-radial-node-h: 34px;
+  --zdt-radial-node-max-w: 145px;
+  --zdt-transition: 170ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Automatic Light Follow when Zen/OS is in Light Mode and theme = "zen" */
+@media (prefers-color-scheme: light) {
+  :root:not([data-zdt-theme="dark"]) {
+    --zdt-surface-base: var(--zen-colors-tertiary, #f4f4f8);
+    --zdt-surface-elevated: var(--zen-colors-secondary, #ffffff);
+    --zdt-bg: color-mix(in srgb, var(--zdt-surface-base) 48%, rgba(255, 255, 255, 0.42));
+    --zdt-bg-elevated: color-mix(in srgb, var(--zdt-surface-elevated) 60%, rgba(255, 255, 255, 0.55));
+    --zdt-border: rgba(0, 0, 0, 0.14);
+    --zdt-border-specular: inset 0 1px 0 0 rgba(255, 255, 255, 0.75);
+    --zdt-text: rgba(20, 20, 24, 0.96);
+    --zdt-text-muted: rgba(95, 95, 108, 0.9);
+    --zdt-item-hover: rgba(0, 0, 0, 0.07);
+    --zdt-shadow:
+      0 18px 40px -6px rgba(0, 0, 0, 0.22),
+      0 0 1px 1px rgba(0, 0, 0, 0.08),
+      var(--zdt-border-specular);
+  }
+}
+
+/* Explicit Dark Theme Override */
+:root[data-zdt-theme="dark"] {
+  --zdt-surface-base: #15151b;
+  --zdt-surface-elevated: #22222b;
+  --zdt-bg: rgba(20, 20, 26, 0.48);
+  --zdt-bg-elevated: rgba(32, 32, 42, 0.58);
+  --zdt-border: rgba(255, 255, 255, 0.18);
+  --zdt-border-specular: inset 0 1px 0 0 rgba(255, 255, 255, 0.24);
+  --zdt-text: rgba(248, 250, 252, 0.96);
+  --zdt-text-muted: rgba(180, 180, 190, 0.88);
+  --zdt-item-hover: rgba(255, 255, 255, 0.12);
+}
+
+/* Explicit Light Theme Override */
+:root[data-zdt-theme="light"] {
+  --zdt-surface-base: #f4f4f8;
+  --zdt-surface-elevated: #ffffff;
+  --zdt-bg: rgba(248, 248, 252, 0.56);
+  --zdt-bg-elevated: rgba(255, 255, 255, 0.68);
+  --zdt-border: rgba(0, 0, 0, 0.14);
+  --zdt-border-specular: inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+  --zdt-text: rgba(20, 20, 24, 0.96);
+  --zdt-text-muted: rgba(95, 95, 108, 0.9);
+  --zdt-item-hover: rgba(0, 0, 0, 0.07);
+  --zdt-shadow:
+    0 18px 40px -6px rgba(0, 0, 0, 0.22),
+    0 0 1px 1px rgba(0, 0, 0, 0.08),
+    var(--zdt-border-specular);
+}
+
+/* --- Glass Blur OFF State --- */
+:root[data-zdt-glass="false"] {
+  --zdt-backdrop: none;
+  --zdt-bg: color-mix(in srgb, var(--zdt-surface-base) 96%, #141419);
+  --zdt-bg-elevated: color-mix(in srgb, var(--zdt-surface-elevated) 98%, #1e1e26);
+  --zdt-border-specular: inset 0 0 0 0 transparent;
+}
+
+:root[data-zdt-glass="false"][data-zdt-theme="light"] {
+  --zdt-bg: rgba(248, 248, 252, 0.97);
+  --zdt-bg-elevated: rgba(255, 255, 255, 0.99);
+}
+
+/* --- Sleek Compact Density Mode --- */
+:root[data-zdt-density="sleek"] {
+  --zdt-font-size: 11.5px;
+  --zdt-row-h: 26px;
+  --zdt-pin-size: 26px;
+  --zdt-favicon-size: 14px;
+  --zdt-dock-pad: 4px 7px;
+  --zdt-dock-gap: 4px;
+  --zdt-pill-min-w: 84px;
+  --zdt-pill-max-w: 150px;
+  --zdt-pill-pad: 0 7px;
+  --zdt-popover-w: 256px;
+  --zdt-popover-max-h: 360px;
+  --zdt-list-max-h: 245px;
+  --zdt-radius-lg: 12px;
+  --zdt-radius-md: 8px;
+  --zdt-radius-sm: 6px;
+  --zdt-btn-size: 24px;
+  --zdt-radial-center-size: 70px;
+  --zdt-radial-node-h: 27px;
+  --zdt-radial-node-max-w: 118px;
+}
+
+/* --- Ultra-Dense Micro Density Mode --- */
+:root[data-zdt-density="micro"] {
+  --zdt-font-size: 10.5px;
+  --zdt-row-h: 22px;
+  --zdt-pin-size: 22px;
+  --zdt-favicon-size: 12.5px;
+  --zdt-dock-pad: 3px 5px;
+  --zdt-dock-gap: 3px;
+  --zdt-pill-min-w: 68px;
+  --zdt-pill-max-w: 125px;
+  --zdt-pill-pad: 0 5px;
+  --zdt-popover-w: 222px;
+  --zdt-popover-max-h: 310px;
+  --zdt-list-max-h: 210px;
+  --zdt-radius-lg: 10px;
+  --zdt-radius-md: 6px;
+  --zdt-radius-sm: 5px;
+  --zdt-btn-size: 21px;
+  --zdt-radial-center-size: 58px;
+  --zdt-radial-node-h: 23px;
+  --zdt-radial-node-max-w: 102px;
+}
+
+/* ==========================================================================
+ * SUPPRESS ZEN SIDEBAR FLASH WHEN SWITCHING FROM DUAL TAB VIEWS
+ * ========================================================================== */
+
+:root[data-zdt-suppress-sidebar="true"] #navigator-toolbox[zen-has-hover],
+:root[data-zdt-suppress-sidebar="true"] #navigator-toolbox[flash-popup],
+:root[data-zdt-suppress-sidebar="true"] #zen-sidebar-box[zen-has-hover] {
+  pointer-events: none !important;
+}
+
+/* ==========================================================================
+ * 1. BOTTOM TAB DOCK & HOVER SENSOR
+ * ========================================================================== */
+
+#zdt-bottom-trigger {
+  position: fixed;
+  left: 14%;
+  right: 14%;
+  bottom: 0;
+  height: var(--zdt-hover-height, 6px);
+  z-index: 2147483640;
+  pointer-events: auto;
+  background: transparent;
+}
+
+#zdt-bottom-trigger.zdt-hidden {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+#zdt-bottom-dock {
+  position: fixed;
+  left: 50%;
+  bottom: 10px;
+  transform: translate3d(-50%, calc(100% + 22px), 0) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2147483645;
+  display: flex;
+  align-items: center;
+  gap: var(--zdt-dock-gap);
+  max-width: min(92vw, 1100px);
+  padding: var(--zdt-dock-pad);
+  background: var(--zdt-bg) !important;
+  backdrop-filter: var(--zdt-backdrop) !important;
+  -webkit-backdrop-filter: var(--zdt-backdrop) !important;
+  border: 1px solid var(--zdt-border);
+  border-radius: var(--zdt-radius-lg);
+  box-shadow: var(--zdt-shadow);
+  color: var(--zdt-text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-size: var(--zdt-font-size);
+  user-select: none;
+  transition:
+    transform var(--zdt-transition),
+    opacity var(--zdt-transition),
+    background 120ms ease;
+}
+
+#zdt-bottom-dock.zdt-visible {
+  transform: translate3d(-50%, 0, 0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#zdt-bottom-dock.zdt-pinned {
+  border-color: var(--zdt-border-active);
+}
+
+.zdt-dock-scroll {
+  display: flex;
+  align-items: center;
+  gap: var(--zdt-dock-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: min(82vw, 940px);
+  scrollbar-width: none;
+  padding: 1px;
+}
+
+.zdt-dock-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.zdt-dock-divider {
+  width: 1px;
+  height: calc(var(--zdt-row-h) - 8px);
+  background: var(--zdt-border);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+.zdt-tab-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: var(--zdt-row-h);
+  min-width: var(--zdt-pill-min-w);
+  max-width: var(--zdt-pill-max-w);
+  padding: var(--zdt-pill-pad);
+  border-radius: var(--zdt-radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  color: var(--zdt-text);
+  cursor: pointer;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition:
+    background 130ms ease,
+    border-color 130ms ease,
+    max-width 190ms cubic-bezier(0.22, 1, 0.36, 1),
+    min-width 190ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding 190ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 130ms ease;
+}
+
+/* Compact Icon-Only Pinned / Essential Tab in Bottom Dock & Popover Row */
+.zdt-tab-pill.zdt-tab-pinned-compact {
+  min-width: var(--zdt-pin-size);
+  max-width: var(--zdt-pin-size);
+  padding: 0 calc((var(--zdt-pin-size) - var(--zdt-favicon-size)) / 2 - 1px);
+  gap: 0;
+  justify-content: flex-start;
+}
+
+/* Dim unloaded ("pending") pinned tabs until hovered or loaded */
+.zdt-tab-pill.zdt-tab-unloaded,
+.zdt-radial-node.zdt-tab-unloaded {
+  opacity: 0.45;
+  filter: saturate(0.4);
+}
+
+.zdt-tab-pill.zdt-tab-unloaded:hover,
+.zdt-tab-pill.zdt-tab-unloaded.zdt-kb-selected,
+.zdt-radial-node.zdt-tab-unloaded:hover,
+.zdt-radial-node.zdt-tab-unloaded.zdt-kb-selected {
+  opacity: 0.94;
+  filter: saturate(1);
+}
+
+.zdt-tab-pill.zdt-tab-pinned-compact .zdt-tab-title,
+.zdt-tab-pill.zdt-tab-pinned-compact .zdt-tab-badges,
+.zdt-tab-pill.zdt-tab-pinned-compact .zdt-tab-close {
+  opacity: 0;
+  max-width: 0;
+  pointer-events: none;
+  transition:
+    opacity 140ms ease,
+    max-width 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Smooth inline expansion on hover or keyboard selection */
+.zdt-tab-pill.zdt-tab-pinned-compact:hover,
+.zdt-tab-pill.zdt-tab-pinned-compact.zdt-kb-selected {
+  min-width: 108px;
+  max-width: 175px;
+  padding: 0 8px;
+  gap: 6px;
+}
+
+.zdt-tab-pill.zdt-tab-pinned-compact:hover .zdt-tab-title,
+.zdt-tab-pill.zdt-tab-pinned-compact.zdt-kb-selected .zdt-tab-title {
+  opacity: 1;
+  max-width: 125px;
+}
+
+.zdt-tab-pill.zdt-tab-pinned-compact:hover .zdt-tab-badges,
+.zdt-tab-pill.zdt-tab-pinned-compact.zdt-kb-selected .zdt-tab-badges,
+.zdt-tab-pill.zdt-tab-pinned-compact:hover .zdt-tab-close,
+.zdt-tab-pill.zdt-tab-pinned-compact.zdt-kb-selected .zdt-tab-close {
+  opacity: 1;
+  max-width: 50px;
+  pointer-events: auto;
+}
+
+.zdt-tab-pill:hover,
+.zdt-tab-pill.zdt-kb-selected {
+  background: var(--zdt-item-hover);
+  border-color: var(--zdt-border);
+}
+
+.zdt-tab-pill.zdt-active {
+  background: var(--zdt-item-active);
+  border-color: var(--zdt-border-active);
+  font-weight: 600;
+}
+
+.zdt-tab-pill.zdt-dragging {
+  opacity: 0.45;
+  transform: scale(0.95);
+}
+
+.zdt-tab-pill.zdt-drag-over {
+  border-left: 2px solid var(--zdt-border-active);
+}
+
+.zdt-tab-favicon {
+  width: var(--zdt-favicon-size);
+  height: var(--zdt-favicon-size);
+  border-radius: 3px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.zdt-tab-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.15;
+}
+
+.zdt-tab-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.zdt-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
+  font-size: 9px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--zdt-text-muted);
+}
+
+.zdt-badge-audio {
+  cursor: pointer;
+  color: var(--zdt-border-active);
+}
+
+.zdt-badge-audio:hover {
+  background: var(--zdt-item-active);
+  color: var(--zdt-text);
+}
+
+.zdt-tab-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--zdt-text-muted);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 100ms ease, background 100ms ease, color 100ms ease;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.zdt-tab-pill:hover .zdt-tab-close,
+.zdt-tab-pill.zdt-kb-selected .zdt-tab-close,
+.zdt-list-item:hover .zdt-tab-close,
+.zdt-list-item.zdt-kb-selected .zdt-tab-close {
+  opacity: 1;
+}
+
+.zdt-tab-close:hover {
+  background: rgba(239, 68, 68, 0.22);
+  color: var(--zdt-danger);
+}
+
+.zdt-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--zdt-btn-size);
+  height: var(--zdt-btn-size);
+  border-radius: var(--zdt-radius-sm);
+  border: 1px solid var(--zdt-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--zdt-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.zdt-icon-btn:hover,
+.zdt-icon-btn.zdt-active {
+  background: var(--zdt-item-active);
+  border-color: var(--zdt-border-active);
+}
+
+/* ==========================================================================
+ * 2. CURSOR TAB VIEW (POPOVER CARD & RADIAL RING)
+ * ========================================================================== */
+
+#zdt-cursor-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  pointer-events: none;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: var(--zdt-text);
+  font-size: var(--zdt-font-size);
+  user-select: none;
+}
+
+#zdt-cursor-overlay.zdt-visible {
+  pointer-events: auto;
+}
+
+/* --- Popover Card Mode --- */
+.zdt-cursor-popover {
+  position: fixed;
+  width: var(--zdt-popover-w);
+  max-height: var(--zdt-popover-max-h);
+  display: flex;
+  flex-direction: column;
+  background: var(--zdt-bg) !important;
+  backdrop-filter: var(--zdt-backdrop) !important;
+  -webkit-backdrop-filter: var(--zdt-backdrop) !important;
+  border: 1px solid var(--zdt-border);
+  border-radius: var(--zdt-radius-lg);
+  box-shadow: var(--zdt-shadow);
+  overflow: hidden;
+  transform-origin: top left;
+  animation: zdtPopIn 130ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes zdtPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.93);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.zdt-popover-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 7px;
+  border-bottom: 1px solid var(--zdt-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.zdt-search-input {
+  flex: 1;
+  height: var(--zdt-btn-size);
+  padding: 0 8px;
+  border-radius: var(--zdt-radius-sm);
+  border: 1px solid var(--zdt-border);
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--zdt-text);
+  font-size: var(--zdt-font-size);
+  outline: none;
+}
+
+.zdt-search-input:focus {
+  border-color: var(--zdt-border-active);
+}
+
+/* Compact Pinned/Essential Strip inside Cursor Popover */
+.zdt-popover-pinned-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 5px 7px;
+  border-bottom: 1px solid var(--zdt-border);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.zdt-popover-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 5px;
+  overflow-y: auto;
+  max-height: var(--zdt-list-max-h);
+  scrollbar-width: thin;
+}
+
+.zdt-list-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: var(--zdt-row-h);
+  padding: 0 7px;
+  border-radius: var(--zdt-radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: var(--zdt-font-size);
+  transition: background 100ms ease, border-color 100ms ease;
+}
+
+.zdt-list-item:hover,
+.zdt-list-item.zdt-kb-selected {
+  background: var(--zdt-item-hover);
+  border-color: var(--zdt-border);
+}
+
+.zdt-list-item.zdt-active {
+  background: var(--zdt-item-active);
+  border-color: var(--zdt-border-active);
+  font-weight: 600;
+}
+
+.zdt-list-item.zdt-dragging {
+  opacity: 0.45;
+}
+
+.zdt-list-item.zdt-drag-over {
+  border-top: 2px solid var(--zdt-border-active);
+}
+
+.zdt-popover-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  border-top: 1px solid var(--zdt-border);
+  font-size: 10.5px;
+  color: var(--zdt-text-muted);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+ * 3. UNIFIED SETTINGS POPOVER MENU (⚙)
+ * ========================================================================== */
+
+.zdt-settings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px 10px;
+  border-top: 1px solid var(--zdt-border);
+  background: rgba(0, 0, 0, 0.16);
+  font-size: 11px;
+}
+
+.zdt-dock-settings-popover {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  width: 248px;
+  padding: 10px 11px;
+  border-radius: var(--zdt-radius-md);
+  background: var(--zdt-bg-elevated) !important;
+  backdrop-filter: var(--zdt-backdrop) !important;
+  -webkit-backdrop-filter: var(--zdt-backdrop) !important;
+  border: 1px solid var(--zdt-border);
+  box-shadow: var(--zdt-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  z-index: 20;
+}
+
+.zdt-radial-settings-popover {
+  position: absolute;
+  top: calc(var(--zdt-radial-center-size) / 2 + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 245px;
+  padding: 10px 11px;
+  border-radius: var(--zdt-radius-md);
+  background: var(--zdt-bg-elevated) !important;
+  backdrop-filter: var(--zdt-backdrop) !important;
+  -webkit-backdrop-filter: var(--zdt-backdrop) !important;
+  border: 1px solid var(--zdt-border);
+  box-shadow: var(--zdt-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  z-index: 30;
+}
+
+.zdt-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.zdt-setting-label {
+  color: var(--zdt-text);
+  font-size: 10.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.zdt-segmented-group {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--zdt-border);
+  border-radius: 6px;
+  padding: 1.5px;
+  gap: 2px;
+}
+
+.zdt-seg-btn {
+  border: none;
+  background: transparent;
+  color: var(--zdt-text-muted);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4.5px;
+  cursor: pointer;
+  transition: background 110ms ease, color 110ms ease;
+}
+
+.zdt-seg-btn:hover {
+  color: var(--zdt-text);
+}
+
+.zdt-seg-btn.zdt-active {
+  background: var(--zdt-item-active);
+  color: var(--zdt-text);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px var(--zdt-border-active);
+}
+
+/* ==========================================================================
+ * 4. RADIAL RING MODE AROUND CURSOR
+ * ========================================================================== */
+
+.zdt-radial-container {
+  position: fixed;
+  width: 0;
+  height: 0;
+  pointer-events: auto;
+  animation: zdtPopIn 140ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.zdt-radial-center {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: var(--zdt-radial-center-size);
+  height: var(--zdt-radial-center-size);
+  border-radius: 50%;
+  background: var(--zdt-bg-elevated) !important;
+  backdrop-filter: var(--zdt-backdrop) !important;
+  -webkit-backdrop-filter: var(--zdt-backdrop) !important;
+  border: 1.5px solid var(--zdt-border-active);
+  box-shadow: var(--zdt-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  text-align: center;
+  z-index: 2;
+}
+
+.zdt-radial-center-title {
+  font-size: 10px;
+  font-weight: 600;
+  max-width: calc(var(--zdt-radial-center-size) - 12px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--zdt-text);
+}
+
+.zdt-radial-center-sub {
+  font-size: 8.5px;
+  color: var(--zdt-text-muted);
+  margin-top: 1px;
+}
+
+.zdt-radial-Center-actions {
+  display: flex;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.zdt-mini-btn {
+  border: 1px solid var(--zdt-border);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--zdt-text);
+  border-radius: 5px;
+  padding: 1px 5px;
+  font-size: 9.5px;
+  cursor: pointer;
+}
+
+.zdt-mini-btn:hover,
+.zdt-mini-btn.zdt-active {
+  background: var(--zdt-item-active);
+  border-color: var(--zdt-border-active);
+}
+
+.zdt-radial-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: var(--zdt-radial-node-h);
+  max-width: var(--zdt-radial-node-max-w);
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--zdt-bg-elevated) !important;
+  backdrop-filter: var(--zdt-backdrop) !important;
+  -webkit-backdrop-filter: var(--zdt-backdrop) !important;
+  border: 1px solid var(--zdt-border);
+  box-shadow: var(--zdt-shadow);
+  cursor: pointer;
+  font-size: var(--zdt-font-size);
+  overflow: hidden;
+  transition:
+    transform 130ms ease,
+    background 130ms ease,
+    border-color 130ms ease,
+    max-width 190ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding 190ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 130ms ease;
+}
+
+/* Compact Icon-Only Pinned Node in Radial Ring that Expands on Hover */
+.zdt-radial-node.zdt-radial-pinned-compact {
+  max-width: var(--zdt-radial-node-h);
+  padding: 0 calc((var(--zdt-radial-node-h) - var(--zdt-favicon-size)) / 2 - 1px);
+  gap: 0;
+}
+
+.zdt-radial-node.zdt-radial-pinned-compact .zdt-tab-title,
+.zdt-radial-node.zdt-radial-pinned-compact .zdt-tab-close {
+  opacity: 0;
+  max-width: 0;
+  pointer-events: none;
+  transition:
+    opacity 130ms ease,
+    max-width 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.zdt-radial-node.zdt-radial-pinned-compact:hover,
+.zdt-radial-node.zdt-radial-pinned-compact.zdt-kb-selected {
+  max-width: 145px;
+  padding: 0 9px;
+  gap: 5px;
+}
+
+.zdt-radial-node.zdt-radial-pinned-compact:hover .zdt-tab-title,
+.zdt-radial-node.zdt-radial-pinned-compact.zdt-kb-selected .zdt-tab-title {
+  opacity: 1;
+  max-width: 105px;
+}
+
+.zdt-radial-node.zdt-radial-pinned-compact:hover .zdt-tab-close,
+.zdt-radial-node.zdt-radial-pinned-compact.zdt-kb-selected .zdt-tab-close {
+  opacity: 1;
+  max-width: 18px;
+  pointer-events: auto;
+}
+
+.zdt-radial-node:hover,
+.zdt-radial-node.zdt-kb-selected {
+  transform: translate(-50%, -50%) scale(1.07);
+  background: var(--zdt-item-hover);
+  border-color: var(--zdt-border-active);
+  z-index: 5;
+}
+
+.zdt-radial-node.zdt-active {
+  background: var(--zdt-item-active);
+  border-color: var(--zdt-border-active);
+  font-weight: 600;
+}

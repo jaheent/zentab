@@ -1,0 +1,150 @@
+[
+  {
+    "property": "mod.zendualtabs.glass_blur",
+    "label": "Glass Blur Effect (On / Off)",
+    "type": "checkbox",
+    "defaultValue": true
+  },
+  {
+    "property": "mod.zendualtabs.density",
+    "label": "Layout Size (Normal / Sleek / Micro)",
+    "type": "dropdown",
+    "defaultValue": "normal",
+    "options": [
+      {
+        "label": "Normal (34px rows/pills, 320px popover, 135px radial ring)",
+        "value": "normal"
+      },
+      {
+        "label": "Sleek Compact (26px rows/pills, 252px popover, 98px radial ring)",
+        "value": "sleek"
+      },
+      {
+        "label": "Ultra-Dense Micro (22px rows/pills, 216px popover, 82px radial ring)",
+        "value": "micro"
+      }
+    ]
+  },
+  {
+    "property": "mod.zendualtabs.color_theme",
+    "label": "Color Theme (Follow Zen Theme / Dark / Light)",
+    "type": "dropdown",
+    "defaultValue": "zen",
+    "options": [
+      {
+        "label": "Follow Zen Theme (Adapts to Zen workspace/theme & scheme)",
+        "value": "zen"
+      },
+      {
+        "label": "Dark Theme",
+        "value": "dark"
+      },
+      {
+        "label": "Light Theme",
+        "value": "light"
+      }
+    ]
+  },
+  {
+    "property": "mod.zendualtabs.cursor_layout",
+    "label": "Cursor Tab View layout style",
+    "type": "dropdown",
+    "defaultValue": "popover",
+    "options": [
+      {
+        "label": "Popover Card (Scrollable vertical list with search & keyboard navigation)",
+        "value": "popover"
+      },
+      {
+        "label": "Radial Ring (Pie menu arranged around the cursor)",
+        "value": "radial"
+      }
+    ]
+  },
+  {
+    "property": "mod.zendualtabs.cursor_shortcut",
+    "label": "Keyboard shortcut to trigger Cursor Tab View (e.g., Alt+X, Ctrl+Shift+Space)",
+    "type": "string",
+    "defaultValue": "Alt+X"
+  },
+  {
+    "property": "mod.zendualtabs.cursor_interaction",
+    "label": "Cursor Tab View interaction mode",
+    "type": "dropdown",
+    "defaultValue": "toggle",
+    "options": [
+      {
+        "label": "Toggle Mode (Press shortcut to open; click, Enter, Escape, or press again to close)",
+        "value": "toggle"
+      },
+      {
+        "label": "Hold-to-Peek Mode (Hold shortcut to view; release over a tab to switch)",
+        "value": "hold"
+      }
+    ]
+  },
+  {
+    "property": "mod.zendualtabs.bottom_mode",
+    "label": "Bottom Tab Dock trigger mode",
+    "type": "dropdown",
+    "defaultValue": "both",
+    "options": [
+      {
+        "label": "Both: Auto-show on bottom edge hover + Keyboard shortcut toggle",
+        "value": "both"
+      },
+      {
+        "label": "Keyboard shortcut toggle ONLY (never triggers on mouse hover)",
+        "value": "shortcut"
+      },
+      {
+        "label": "Bottom edge hover ONLY",
+        "value": "hover"
+      },
+      {
+        "label": "Disabled",
+        "value": "disabled"
+      }
+    ]
+  },
+  {
+    "property": "mod.zendualtabs.bottom_shortcut",
+    "label": "Keyboard shortcut to toggle Bottom Tab Dock (e.g., Alt+Z, Ctrl+Shift+B)",
+    "type": "string",
+    "defaultValue": "Alt+Z"
+  },
+  {
+    "property": "mod.zendualtabs.bottom_hover_height",
+    "label": "Bottom hover trigger strip height in pixels (when hover is enabled)",
+    "type": "string",
+    "defaultValue": "6px"
+  },
+  {
+    "property": "mod.zendualtabs.pinned_show_close",
+    "label": "Show close (×) button on Pinned / Essential tabs when expanded on hover (middle-click always closes)",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
+    "property": "mod.zendualtabs.workspace_scope",
+    "label": "Workspace tab filtering",
+    "type": "dropdown",
+    "defaultValue": "visible",
+    "options": [
+      {
+        "label": "Active Zen Workspace + Pinned / Essential tabs only",
+        "value": "visible"
+      },
+      {
+        "label": "All open tabs across all workspaces",
+        "value": "all"
+      }
+    ]
+  },
+  {
+    "property": "mod.zendualtabs.close_on_switch",
+    "label": "Auto-hide pinned Bottom Dock after switching tabs",
+    "type": "checkbox",
+    "defaultValue": false
+  }
+]
