@@ -46,7 +46,7 @@ It adds **two independent, fully interactive tab views**:
 ### Option A: Install via Sine (Recommended)
 1. Ensure you have [Sine](https://github.com/CosmoCreeper/Sine) installed in Zen Browser.
 2. Open Zen **Settings** → **Sine Mods**.
-3. Add this repository URL (`https://github.com/Jaheen/ZenMod_Tab`) and click **Install**.
+3. Add this repository URL (`https://github.com/jaheent/zentab.git`) and click **Install**.
 4. Configure shortcuts and behavior anytime via the gear icon (`preferences.json`) in Sine.
 
 ### Option B: Local / fx-autoconfig Install (Windows PowerShell)
