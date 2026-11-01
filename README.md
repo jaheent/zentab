@@ -76,8 +76,3 @@ Then restart Zen Browser (or clear startup cache in `about:support` and restart)
 | `mod.zendualtabs.close_on_switch` | `false` | Auto-hide pinned Bottom Dock after switching tabs |
 
 ---
-
-## 🚀 Publishing Your Mod
-1. Push this directory to a public GitHub repository (e.g., `https://github.com/<your-username>/ZenMod_Tab`).
-2. Update the `"homepage"` field in [`theme.json`](file:///c:/Users/Jaheen/Documents/Projects/ZenMod_Tab/theme.json) if your GitHub username or repo name differs.
-3. Users can install it directly in **Sine** using your `owner/repo` or full GitHub URL!
